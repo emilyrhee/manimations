@@ -26,7 +26,7 @@ class Induction(Scene):
 
         image: ImageMobject = ImageMobject("assets/think.png")
         image.shift(RIGHT * 4, DOWN * 2)
-        image.scale(0.1,)
+        image.scale(0.1)
 
         self.play(
             Transform(induction, p_of_k_minus_1),
@@ -64,9 +64,13 @@ class NegativeInduction(Scene):
         )
         group: Group = Group(left_hand_side, right_hand_side)
         group.arrange(RIGHT, buff=1)
-        group.shift(UP * 3)
         for expression in group:
             self.play(Write(expression))
             self.wait(1)
 
-        result: MathTex = MathTex("")
+        result: MathTex = MathTex("-2", " ", "\leq", " ", "1")
+        result.shift(DOWN)
+        result.set_color_by_tex("-2", ORANGE).set_color_by_tex("1", BLUE)
+        check_emoji: ImageMobject = ImageMobject("assets/check.png")
+        check_emoji.scale(0.4).shift(RIGHT * 4, DOWN)
+        self.play(Write(result), FadeIn(check_emoji))
