@@ -1,13 +1,12 @@
 from manim import *
 
-class Induction(Scene):
+class Intro(Scene):
     def construct(self):
-        steps: Text = Text("Steps to induction:", font_size=40)
-        font_size: int = 36
-        p_of_n: Text = Text("Claim P(n)", font_size)
-        basis: Text = Text("Show basis P(1)", font_size)
-        hypothesis: Text = Text("Assume P(k)", font_size)
-        induction: Text = Text("Show P(k+1)", font_size)
+        steps: Tex = Tex("Steps to induction:")
+        p_of_n: Tex = Tex("Claim $P(n)$")
+        basis: Tex = Tex("Show basis $P(1)$")
+        hypothesis: Tex = Tex("Assume $P(k)$")
+        induction: Tex = Tex("Show $P(k+1)$")
 
         steps.to_corner(UL)
         self.play(FadeIn(steps))
@@ -21,7 +20,7 @@ class Induction(Scene):
 
         self.wait(1)
 
-        p_of_k_minus_1: Text = Text("Show P(k-1)?", font_size)
+        p_of_k_minus_1: Tex = Tex("Show $P(k-1)$?")
         p_of_k_minus_1.move_to(induction.get_center())
 
         image: ImageMobject = ImageMobject("assets/think.png")
@@ -74,3 +73,7 @@ class NegativeInduction(Scene):
         check_emoji: ImageMobject = ImageMobject("assets/check.png")
         check_emoji.scale(0.4).shift(RIGHT * 4, DOWN)
         self.play(Write(result), FadeIn(check_emoji))
+
+class NegativeHypothesis(Scene):
+    def construct(self):
+        hypothesis: Tex = Tex("dsin")
