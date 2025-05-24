@@ -76,4 +76,41 @@ class NegativeInduction(Scene):
 
 class NegativeHypothesis(Scene):
     def construct(self):
-        hypothesis: Tex = Tex("dsin")
+        hypothesis: MathTex = MathTex(
+            r"\text{Assume } 2k &\leq k^2 \text{ for some negative integer } k.\\",
+            r"2k - 2 &\leq k^2 - 2\\",
+            r"2k - 2 &\leq k^2 + 1\\",
+            r"2k - 2 &\leq k^2 - 2k + 1."
+        )
+        self.play(hypothesis.get_part_by_tex(r"2k &\leq k^2").animate.to_edge(UP))
+        self.wait(1)
+
+        want: Tex = Tex(
+            "We want $2(k - 1) \leq (k - 1)^2$."
+        )
+        self.play(FadeIn(want))
+        self.wait(1)
+        want_lhs_distributed: Tex = Tex(
+            "We want $2k - 2 \leq (k - 1)^2$."
+        )
+        self.play(want.animate.become(want_lhs_distributed))
+        self.wait(1)
+        want_rhs_expanded: Tex = Tex(
+            "We want $2k - 2 \leq k^2 - 2k + 1$."
+        )
+        self.play(want.animate.become(want_rhs_expanded))
+        self.wait(1)
+        self.play(want.animate.scale(0.5).to_corner(DL))
+
+        self.play(hypothesis.get_part_by_tex(r"2k - 2 &\leq k^2 - 2\\").animate.shift(UP * 2))
+        self.wait(1)
+        self.play(hypothesis.get_part_by_tex(r"2k - 2 &\leq k^2 + 1\\").animate.shift(UP * 2))
+        self.wait(1)
+        self.play(hypothesis.get_part_by_tex(r"2k - 2 &\leq k^2 - 2k + 1.").animate.shift(UP * 2))
+        # self.play(want.animate.shift(ORIGIN).scale(2))
+    
+
+class BasicEquationsSimple(Scene):
+    def construct(self):
+        eqns = MathTex(r"2x - 3 & = -7 \\", r"2x & = -4 \\", r"x & = -2")
+        self.play(Write(eqns))
