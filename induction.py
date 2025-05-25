@@ -101,16 +101,19 @@ class NegativeHypothesis(Scene):
         self.play(want.animate.become(want_rhs_expanded))
         self.wait(1)
         self.play(want.animate.scale(0.5).to_corner(DL))
-
+        self.wait(1)
         self.play(hypothesis.get_part_by_tex(r"2k - 2 &\leq k^2 - 2\\").animate.shift(UP * 2))
+        self.wait(1)
+        plus_3: MathTex = MathTex(
+            "+ 3",
+            color=YELLOW
+        )
+        plus_3.next_to(hypothesis.get_part_by_tex(r"2k - 2 &\leq k^2 - 2\\"), RIGHT)
+        self.play(Write(plus_3))
         self.wait(1)
         self.play(hypothesis.get_part_by_tex(r"2k - 2 &\leq k^2 + 1\\").animate.shift(UP * 2))
         self.wait(1)
         self.play(hypothesis.get_part_by_tex(r"2k - 2 &\leq k^2 - 2k + 1.").animate.shift(UP * 2))
-        # self.play(want.animate.shift(ORIGIN).scale(2))
-    
-
-class BasicEquationsSimple(Scene):
-    def construct(self):
-        eqns = MathTex(r"2x - 3 & = -7 \\", r"2x & = -4 \\", r"x & = -2")
-        self.play(Write(eqns))
+        self.play(want.animate.move_to(ORIGIN).scale(2))
+        self.wait(1)
+        self.play(want.animate.scale(0.25).to_corner(DL))
