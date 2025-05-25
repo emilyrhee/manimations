@@ -91,13 +91,15 @@ class NegativeHypothesis(Scene):
         self.play(FadeIn(want))
         self.wait(1)
         want_lhs_distributed: Tex = Tex(
-            "We want $2k - 2 \leq (k - 1)^2$."
+            "We want", " ", "$2k - 2$", " ", "$\leq (k - 1)^2$."
         )
+        want_lhs_distributed.set_color_by_tex("$2k - 2", BLUE)
         self.play(want.animate.become(want_lhs_distributed))
         self.wait(1)
         want_rhs_expanded: Tex = Tex(
-            "We want $2k - 2 \leq k^2 - 2k + 1$."
+            "We want", " ", "$2k - 2$", " ", "$\leq$", " ", "$k^2 - 2k + 1$."
         )
+        want_rhs_expanded.set_color_by_tex("$2k - 2", BLUE).set_color_by_tex("$k^2 - 2k + 1", ORANGE)
         self.play(want.animate.become(want_rhs_expanded))
         self.wait(1)
         self.play(want.animate.scale(0.5).to_corner(DL))
@@ -117,3 +119,4 @@ class NegativeHypothesis(Scene):
         self.play(want.animate.move_to(ORIGIN).scale(2))
         self.wait(1)
         self.play(want.animate.scale(0.25).to_corner(DL))
+
