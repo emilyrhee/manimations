@@ -7,28 +7,39 @@ class Intro(Scene):
         basis: Tex = Tex("Show basis $P(1)$")
         hypothesis: Tex = Tex("Assume $P(k)$")
         induction: Tex = Tex("Show $P(k+1)$")
+        p_of_k_minus_1: Tex = Tex("Show $P(k-1)$?")
 
         steps.to_corner(UL)
         self.play(FadeIn(steps))
-        group: VGroup = VGroup(p_of_n, basis, hypothesis, induction)
+
+        group: Group = Group(
+            p_of_n,
+            basis,
+            hypothesis, 
+            induction,
+            p_of_k_minus_1
+        )
         group.arrange(DOWN, buff=0.5)
         group.move_to(ORIGIN)
+        p_of_k_minus_1.shift(UP)
 
         for text in group:
-            self.play(FadeIn(text))
+            text.align_to(group[0], LEFT)
+
+        for i, text in enumerate(group[:-1], start=1):
+            number = Tex(f"{i}.").next_to(text, LEFT)  # Add a number to the left of each element
+            self.play(FadeIn(number), FadeIn(text))
             self.wait(1)
 
         self.wait(1)
 
-        p_of_k_minus_1: Tex = Tex("Show $P(k-1)$?")
-        p_of_k_minus_1.move_to(induction.get_center())
 
         image: ImageMobject = ImageMobject("assets/think.png")
         image.shift(RIGHT * 4, DOWN * 2)
         image.scale(0.1)
 
         self.play(
-            Transform(induction, p_of_k_minus_1),
+            induction.animate.become(p_of_k_minus_1),
             FadeIn(image)
         )
         self.wait(2)
@@ -78,12 +89,13 @@ class NegativeHypothesis(Scene):
     def construct(self):
         hypothesis: MathTex = MathTex(
             r"\text{Assume } 2k &\leq k^2 \text{ for some negative integer } k.\\",
-            r"2k - 2 &\leq k^2 - 2\\",
-            r"2k - 2 &\leq k^2 + 1\\",
-            r"2k - 2 &\leq k^2 - 2k + 1."
+            "2k - 2", r"&\leq k^2 - 2\\",
+            r"&\leq k^2 + 1\\",
+            r"  &\leq", "k^2 - 2k + 1."
         )
         self.play(hypothesis.get_part_by_tex(r"2k &\leq k^2").animate.to_edge(UP))
         self.wait(1)
+        hypothesis.set_color_by_tex("2k - 2", BLUE)
 
         want: Tex = Tex(
             "We want $2(k - 1) \leq (k - 1)^2$."
@@ -104,18 +116,21 @@ class NegativeHypothesis(Scene):
         self.wait(1)
         self.play(want.animate.scale(0.5).to_corner(DL))
         self.wait(1)
-        self.play(hypothesis.get_part_by_tex(r"2k - 2 &\leq k^2 - 2\\").animate.shift(UP * 2))
+        group = Group(hypothesis.get_part_by_tex("2k - 2"), hypothesis.get_part_by_tex(r"&\leq k^2 - 2\\"))
+        self.play(group.animate.shift(UP * 2))
         self.wait(1)
         plus_3: MathTex = MathTex(
             "+ 3",
             color=YELLOW
         )
-        plus_3.next_to(hypothesis.get_part_by_tex(r"2k - 2 &\leq k^2 - 2\\"), RIGHT)
+        plus_3.next_to(hypothesis.get_part_by_tex(r"&\leq k^2 - 2\\"), RIGHT)
         self.play(Write(plus_3))
         self.wait(1)
-        self.play(hypothesis.get_part_by_tex(r"2k - 2 &\leq k^2 + 1\\").animate.shift(UP * 2))
+        self.play(hypothesis.get_part_by_tex(r"&\leq k^2 + 1\\").animate.shift(UP * 2))
         self.wait(1)
-        self.play(hypothesis.get_part_by_tex(r"2k - 2 &\leq k^2 - 2k + 1.").animate.shift(UP * 2))
+        hypothesis.set_color_by_tex("k^2 - 2k + 1.", ORANGE)
+        last_group = Group(hypothesis.get_part_by_tex(r"  &\leq"), hypothesis.get_part_by_tex("k^2 - 2k + 1."))
+        self.play(last_group.animate.shift(UP * 2))
         self.play(want.animate.move_to(ORIGIN).scale(2))
         self.wait(1)
         self.play(want.animate.scale(0.25).to_corner(DL))
