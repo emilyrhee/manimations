@@ -53,6 +53,8 @@ class NegativeInduction(Scene):
             font_size=40
         )
         p_of_n.set_color_by_tex("2n", BLUE).set_color_by_tex("n^2", ORANGE)
+        self.play(FadeIn(p_of_n))
+        self.wait(1)
         self.play(p_of_n.animate.to_corner(UP))
         self.wait(1)
 
@@ -60,6 +62,8 @@ class NegativeInduction(Scene):
             "Base case: $n = -1$",
             font_size=40
         )
+        self.play(FadeIn(base_case))
+        self.wait(1)
         self.play(base_case.animate.shift(LEFT * 5, UP * 2))
 
         left_hand_side: MathTex = MathTex(
@@ -80,7 +84,7 @@ class NegativeInduction(Scene):
 
         result: MathTex = MathTex("-2", " ", "\leq", " ", "1")
         result.shift(DOWN)
-        result.set_color_by_tex("-2", ORANGE).set_color_by_tex("1", BLUE)
+        result.set_color_by_tex("-2", BLUE).set_color_by_tex("1", ORANGE)
         check_emoji: ImageMobject = ImageMobject("assets/check.png")
         check_emoji.scale(0.4).shift(RIGHT * 4, DOWN)
         self.play(Write(result), FadeIn(check_emoji))
@@ -93,6 +97,7 @@ class NegativeHypothesis(Scene):
             r"&\leq k^2 + 1\\",
             r"  &\leq", "k^2 - 2k + 1."
         )
+        self.play(FadeIn(hypothesis.get_part_by_tex(r"2k &\leq k^2")))
         self.play(hypothesis.get_part_by_tex(r"2k &\leq k^2").animate.to_edge(UP))
         self.wait(1)
         hypothesis.set_color_by_tex("2k - 2", BLUE)
@@ -117,6 +122,7 @@ class NegativeHypothesis(Scene):
         self.play(want.animate.scale(0.5).to_corner(DL))
         self.wait(1)
         group = Group(hypothesis.get_part_by_tex("2k - 2"), hypothesis.get_part_by_tex(r"&\leq k^2 - 2\\"))
+        self.play(FadeIn(group))
         self.play(group.animate.shift(UP * 2))
         self.wait(1)
         plus_3: MathTex = MathTex(
@@ -126,12 +132,20 @@ class NegativeHypothesis(Scene):
         plus_3.next_to(hypothesis.get_part_by_tex(r"&\leq k^2 - 2\\"), RIGHT)
         self.play(Write(plus_3))
         self.wait(1)
-        self.play(hypothesis.get_part_by_tex(r"&\leq k^2 + 1\\").animate.shift(UP * 2))
-        self.wait(1)
         hypothesis.set_color_by_tex("k^2 - 2k + 1.", ORANGE)
+       
+       
         last_group = Group(hypothesis.get_part_by_tex(r"  &\leq"), hypothesis.get_part_by_tex("k^2 - 2k + 1."))
         self.play(last_group.animate.shift(UP * 2))
         self.play(want.animate.move_to(ORIGIN).scale(2))
         self.wait(1)
-        self.play(want.animate.scale(0.25).to_corner(DL))
+        conclusion: Tex = Tex("We have shown", " ", "$2(k - 1)$", " ", "$\leq$", " ", "$(k - 1)^2$.")
+        conclusion.set_color_by_tex("$2(k - 1)$", ORANGE).set_color_by_tex("$(k - 1)^2$.", BLUE)
+        self.play(want.animate.become(conclusion))
+        hence: Tex = Tex(
+            r"Hence, by mathematical induction, \\$2n \leq n^2$ for all negative integers $n$."
+        )
+        hence.shift(DOWN * 2)
+        self.play(FadeIn(hence))
+        self.wait(1)
 
