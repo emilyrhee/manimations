@@ -4,7 +4,7 @@ class Intro(Scene):
     def construct(self):
         steps: Tex = Tex("Steps to induction:")
         p_of_n: Tex = Tex("Claim $P(n)$")
-        basis: Tex = Tex("Show basis $P(1)$")
+        basis: Tex = Tex("Show base case")
         hypothesis: Tex = Tex("Assume $P(k)$")
         induction: Tex = Tex("Show $P(k+1)$")
         p_of_k_minus_1: Tex = Tex("Show $P(k-1)$?")
