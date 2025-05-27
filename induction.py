@@ -44,9 +44,24 @@ class Intro(Scene):
         )
         self.wait(2)
 
+class PositiveInduction(Scene):
+    def construct(self):
+        claim: Tex = Tex(
+            "Claim: ", "$2n$", " ", "$\leq$", " ", "$n^2$",
+            " for all $n \geq 2$.",
+        )
+        claim.set_color_by_tex("2n", BLUE).set_color_by_tex("n^2", ORANGE)
+        self.play(FadeIn(claim))
+        self.wait(1)
+        self.play(claim.animate.to_edge(UP))
+        
+        base_case: Tex = Tex("Base case: $n = 2$")
+        self.play(FadeIn(base_case))
+        self.wait(1)
+        self.play(base_case.animate.shift(LEFT * 5, UP * 2))
+
 class NegativeInduction(Scene):
     def construct(self):
-        font_size = 40
         p_of_n: Tex = Tex(
             "Claim: ", "$2n$", " ", "$\leq$", " ", "$n^2$",
             " for all negative $n$.",
@@ -60,7 +75,6 @@ class NegativeInduction(Scene):
 
         base_case: Tex = Tex(
             "Base case: $n = -1$",
-            font_size=40
         )
         self.play(FadeIn(base_case))
         self.wait(1)
