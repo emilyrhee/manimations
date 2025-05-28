@@ -61,13 +61,14 @@ class PositiveInduction(Scene):
         self.play(base_case.animate.shift(LEFT * 5, UP * 2))
         self.wait(1)
 
-        left_hand_side: MathTex = MathTex("2(2) = 4", color=BLUE)
-        right_hand_side: MathTex = MathTex("2^2 = 4", color=ORANGE)
-        group: Group = Group(left_hand_side, right_hand_side)
-        group.arrange(RIGHT, buff=1)
-        for expression in group:
-            self.play(Write(expression))
-            self.wait(1)
+        expression: MathTex = MathTex("2(2)", "=", "4", "\qquad", "2^2", "=", "4")
+        expression[0].set_color(BLUE)
+        expression[2].set_color(BLUE)
+        expression[4].set_color(ORANGE)
+        expression[6].set_color(ORANGE)
+        self.play(Write(expression[:4]))
+        self.wait(1)
+        self.play(Write(expression[4:7]))
         
         result: MathTex = MathTex("4", " ", "\leq", " ", "4")
         result.shift(DOWN)
