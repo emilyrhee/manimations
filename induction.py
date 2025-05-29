@@ -78,6 +78,30 @@ class PositiveInduction(Scene):
         check_emoji.scale(0.4).shift(RIGHT * 4, DOWN)
         self.play(Write(result), FadeIn(check_emoji))
 
+class PositiveInduction2(Scene):
+    def construct(self):
+        hypothesis: Tex = Tex(
+            "Assume $2k \leq k^2$ for some integer $k \geq$.",
+            " ", "$2$")
+        self.play(FadeIn(hypothesis))
+        self.wait(1)
+        rectangle = SurroundingRectangle(hypothesis[2],color=YELLOW)
+        self.play(Write(rectangle))
+        self.wait(1)
+        self.play(FadeOut(rectangle))
+        instead: Tex = Tex("Instead...")
+        instead.shift(UP)
+        self.play(hypothesis.animate.shift(UP * 2), FadeIn(instead))
+        new_hypothesis: Tex = Tex(
+            "Assume $2(k + 1) \leq (k + 1)^2$ for some integer $k \geq 1$."
+        )
+        self.play(FadeIn(new_hypothesis))
+        k_equals_one: MathTex = MathTex(
+            "2(1 + 1) = 2(2) = 4 \qquad (1 + 1)^2 = 2^2 = 4"
+        )
+        k_equals_one.shift(DOWN)
+        self.play(FadeIn(k_equals_one))
+
 class NegativeInduction(Scene):
     def construct(self):
         p_of_n: Tex = Tex(
