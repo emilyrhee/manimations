@@ -1,4 +1,5 @@
 from manim import *
+from utils.strikethrough import Strikethrough
 
 class Intro(Scene):
     def construct(self):
@@ -27,12 +28,11 @@ class Intro(Scene):
             text.align_to(group[0], LEFT)
 
         for i, text in enumerate(group[:-1], start=1):
-            number = Tex(f"{i}.").next_to(text, LEFT)  # Add a number to the left of each element
+            number = Tex(f"{i}.").next_to(text, LEFT)
             self.play(FadeIn(number), FadeIn(text))
             self.wait(1)
 
         self.wait(1)
-
 
         image: ImageMobject = ImageMobject("assets/think.png")
         image.shift(RIGHT * 4, DOWN * 2)
@@ -81,17 +81,23 @@ class PositiveInduction(Scene):
 class PositiveInduction2(Scene):
     def construct(self):
         hypothesis: Tex = Tex(
-            "Assume $2k \leq k^2$ for some integer $k \geq$.",
-            " ", "$2$")
+            "Assume $2k \leq k^2$ for some integer $k \geq$",
+            " ", "$2$", ".")
         self.play(FadeIn(hypothesis))
         self.wait(1)
         rectangle = SurroundingRectangle(hypothesis[2],color=YELLOW)
         self.play(Write(rectangle))
         self.wait(1)
         self.play(FadeOut(rectangle))
+
+        strikethrough = Strikethrough(hypothesis)
+        self.play(Create(strikethrough))
+
+        old_hypothesis: Group = Group(hypothesis, strikethrough)
+
         instead: Tex = Tex("Instead...")
         instead.shift(UP)
-        self.play(hypothesis.animate.shift(UP * 2), FadeIn(instead))
+        self.play(old_hypothesis.animate.shift(UP * 2), FadeIn(instead))
         new_hypothesis: Tex = Tex(
             "Assume $2(k + 1) \leq (k + 1)^2$ for some integer $k \geq 1$."
         )
