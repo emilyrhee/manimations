@@ -92,12 +92,11 @@ class PositiveInduction2(Scene):
 
         strikethrough = Strikethrough(hypothesis)
         self.play(Create(strikethrough))
-
-        old_hypothesis: Group = Group(hypothesis, strikethrough)
+        Strikethrough()
 
         instead: Tex = Tex("Instead...")
         instead.shift(UP)
-        self.play(old_hypothesis.animate.shift(UP * 2), FadeIn(instead))
+        self.play(strikethrough.group.animate.shift(UP * 2), FadeIn(instead))
         new_hypothesis: Tex = Tex(
             "Assume $2(k + 1) \leq (k + 1)^2$ for some integer $k \geq 1$."
         )
