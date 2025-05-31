@@ -92,20 +92,26 @@ class PositiveInduction2(Scene):
 
         strikethrough = Strikethrough(hypothesis)
         self.play(Create(strikethrough))
-        Strikethrough()
 
         instead: Tex = Tex("Instead...")
         instead.shift(UP)
         self.play(strikethrough.group.animate.shift(UP * 2), FadeIn(instead))
         new_hypothesis: Tex = Tex(
-            "Assume $2(k + 1) \leq (k + 1)^2$ for some integer $k \geq 1$."
+            "Assume $2($", "$k$", "$ + 1) \leq ($", "$k$",
+            "$+ 1)^2$ for some integer ", "$k$", " ", "$\geq 1$."
         )
+        new_hypothesis.set_color_by_tex("$k$", BLUE)
         self.play(FadeIn(new_hypothesis))
         k_equals_one: MathTex = MathTex(
-            "2(1 + 1) = 2(2) = 4 \qquad (1 + 1)^2 = 2^2 = 4"
+            "2(", "1", "+ 1) = 2(2) = 4 \qquad (", "1", "+ 1)^2 = 2^2 = 4",
         )
+        k_equals_one[1].set_color(BLUE)
+        k_equals_one[3].set_color(BLUE)
         k_equals_one.shift(DOWN)
         self.play(FadeIn(k_equals_one))
+        self.wait(1)
+        self.play(FadeOut(strikethrough.group, instead, k_equals_one))
+        self.wait(1)
 
 class NegativeInduction(Scene):
     def construct(self):
