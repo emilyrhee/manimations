@@ -96,22 +96,41 @@ class PositiveInduction2(Scene):
         instead: Tex = Tex("Instead...")
         instead.shift(UP)
         self.play(strikethrough.group.animate.shift(UP * 2), FadeIn(instead))
-        new_hypothesis: Tex = Tex(
-            "Assume $2($", "$k$", "$ + 1) \leq ($", "$k$",
-            "$+ 1)^2$ for some integer ", "$k$", " ", "$\geq 1$."
+        new_hypothesis: MathTex = MathTex(
+            r"\text{Assume } 2(", "k", "+ 1) &\leq (", "k",
+            r"+ 1)^2 \text{ for some integer }", "k", r"\geq 1.\\",
+
+            r"2k + 4 &\leq k^2 + 2k + 1"
         )
-        new_hypothesis.set_color_by_tex("$k$", BLUE)
-        self.play(FadeIn(new_hypothesis))
+        new_hypothesis_line_1: Group = new_hypothesis[0:7]
+        new_hypothesis.set_color_by_tex("k", PURPLE)
+        self.play(FadeIn(new_hypothesis_line_1))
         k_equals_one: MathTex = MathTex(
             "2(", "1", "+ 1) = 2(2) = 4 \qquad (", "1", "+ 1)^2 = 2^2 = 4",
         )
-        k_equals_one[1].set_color(BLUE)
-        k_equals_one[3].set_color(BLUE)
+        k_equals_one[1].set_color(PURPLE)
+        k_equals_one[3].set_color(PURPLE)
         k_equals_one.shift(DOWN)
         self.play(FadeIn(k_equals_one))
         self.wait(1)
-        self.play(FadeOut(strikethrough.group, instead, k_equals_one))
+        self.play(
+            FadeOut(strikethrough.group, instead, k_equals_one),
+            new_hypothesis_line_1.animate.to_edge(UP)
+        )
         self.wait(1)
+
+        want: Tex = Tex(
+            "We want $2(k + 2) \leq (k + 2)^2$."
+        )
+        self.play(FadeIn(want))
+        self.wait(1)
+        self.play(want.animate.become(Tex("We want $2k + 4 \leq (k + 2)^2$.")))
+        self.wait(1)
+        self.play(
+            want.animate.become(Tex("We want $2k + 4 \leq k^2 + 4k + 4$."))
+        )
+        self.wait(1)
+        self.play(want.animate.scale(0.5).to_corner(DL))
 
 class NegativeInduction(Scene):
     def construct(self):
@@ -197,7 +216,6 @@ class NegativeHypothesis(Scene):
         self.play(Write(plus_3))
         self.wait(1)
         hypothesis.set_color_by_tex("k^2 - 2k + 1.", ORANGE)
-       
        
         last_group = Group(hypothesis.get_part_by_tex(r"  &\leq"), hypothesis.get_part_by_tex("k^2 - 2k + 1."))
         self.play(last_group.animate.shift(UP * 2))
