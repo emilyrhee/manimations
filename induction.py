@@ -97,10 +97,10 @@ class PositiveInduction2(Scene):
         instead.shift(UP)
         self.play(strikethrough.group.animate.shift(UP * 2), FadeIn(instead))
         new_hypothesis: MathTex = MathTex(
-            r"\text{Assume } 2(", "k", "+ 1) &\leq (", "k",
-            r"+ 1)^2 \text{ for some integer }", "k", r"\geq 1.\\",
+            r"\text{Assume } 2(", r"k", r"+ 1) &\leq (", r"k",
+            r"+ 1)^2 \text{ for some integer }", r"k", r"\geq 1.\\",
 
-            r"2k + 4 &\leq k^2 + 2k + 1"
+            r"2k + 2 &\leq k^2 + 2k + 1"
         )
         new_hypothesis_line_1: Group = new_hypothesis[0:7]
         new_hypothesis.set_color_by_tex("k", PURPLE)
@@ -123,6 +123,7 @@ class PositiveInduction2(Scene):
             "We want $2(k + 2) \leq (k + 2)^2$."
         )
         self.play(FadeIn(want))
+        self.play(new_hypothesis_line_1.animate.set_color(WHITE))
         self.wait(1)
         self.play(want.animate.become(Tex("We want $2k + 4 \leq (k + 2)^2$.")))
         self.wait(1)
@@ -131,6 +132,11 @@ class PositiveInduction2(Scene):
         )
         self.wait(1)
         self.play(want.animate.scale(0.5).to_corner(DL))
+        new_hypothesis[7].set_color(WHITE)
+        self.play(
+            FadeIn(new_hypothesis[7]),
+            new_hypothesis[7].animate.shift(UP * 3)
+        )
 
 class NegativeInduction(Scene):
     def construct(self):
