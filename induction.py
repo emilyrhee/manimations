@@ -100,17 +100,20 @@ class PositiveInduction2(Scene):
             r"\text{Assume } 2(", r"k", r"+ 1) &\leq (", r"k",
             r"+ 1)^2 \text{ for some integer }", r"k", r"\geq 1.\\",
 
-            r"2k + 2 &\leq k^2 + 2k + 1"
+            r"2k + 2 &\leq k^2 + 2k + 1\\",
+            r"2k + 4", r"&\leq k^2 + 2k + 3\\",
+            r"&\leq k^2 + 2k + 4\\",
+            r"&\leq", r"k^2 + 4k + 4"
         )
-        new_hypothesis_line_1: Group = new_hypothesis[0:7]
-        new_hypothesis.set_color_by_tex("k", PURPLE)
+        new_hypothesis_line_1: Group = new_hypothesis[0:7].shift(DOWN)
+        new_hypothesis.set_color_by_tex("k", PURPLE).shift(DOWN)
         self.play(FadeIn(new_hypothesis_line_1))
         k_equals_one: MathTex = MathTex(
             "2(", "1", "+ 1) = 2(2) = 4 \qquad (", "1", "+ 1)^2 = 2^2 = 4",
         )
         k_equals_one[1].set_color(PURPLE)
         k_equals_one[3].set_color(PURPLE)
-        k_equals_one.shift(DOWN)
+        k_equals_one.shift(DOWN * 2)
         self.play(FadeIn(k_equals_one))
         self.wait(1)
         self.play(
@@ -119,25 +122,43 @@ class PositiveInduction2(Scene):
         )
         self.wait(1)
 
-        want: Tex = Tex(
-            "We want $2(k + 2) \leq (k + 2)^2$."
+        want: MathTex = MathTex(
+            r"\text{We want } 2(k + 2) &\leq (k + 2)^2\\",
+            r"2k + 4", r"&\leq", r"k^2 + 4k + 4."
         )
-        self.play(FadeIn(want))
+        want[1].set_color(BLUE)
+        want[3].set_color(ORANGE)
+        self.play(FadeIn(want[0]))
         self.play(new_hypothesis_line_1.animate.set_color(WHITE))
         self.wait(1)
-        self.play(want.animate.become(Tex("We want $2k + 4 \leq (k + 2)^2$.")))
-        self.wait(1)
-        self.play(
-            want.animate.become(Tex("We want $2k + 4 \leq k^2 + 4k + 4$."))
-        )
+        
+        self.play(FadeIn(want[1]))
         self.wait(1)
         self.play(want.animate.scale(0.5).to_corner(DL))
-        new_hypothesis[7].set_color(WHITE)
+        new_hypothesis.set_color(WHITE)
         self.play(
             FadeIn(new_hypothesis[7]),
-            new_hypothesis[7].animate.shift(UP * 3)
+            new_hypothesis[7].animate.shift(UP * 2.75)
         )
-
+        self.wait(1)
+        new_hypothesis[8].set_color(BLUE) # 2k + 4
+        self.play(
+            FadeIn(new_hypothesis[8], new_hypothesis[9]),
+            new_hypothesis[8].animate.shift(UP * 2.75),
+            new_hypothesis[9].animate.shift(UP * 2.75)
+        )
+        self.wait(1)
+        self.play(
+            FadeIn(new_hypothesis[10]),
+            new_hypothesis[10].animate.shift(UP * 2.75)
+        )
+        self.wait(1)
+        new_hypothesis[12].set_color(ORANGE) # k^2 + 4k + 4
+        self.play(
+            FadeIn(new_hypothesis[11], new_hypothesis[12]),
+            new_hypothesis[11].animate.shift(UP * 2.75),
+            new_hypothesis[12].animate.shift(UP * 2.75)
+        )
 class NegativeInduction(Scene):
     def construct(self):
         p_of_n: Tex = Tex(
