@@ -134,31 +134,54 @@ class PositiveInduction2(Scene):
         
         self.play(FadeIn(want[1]))
         self.wait(1)
+        self.play(FadeIn(want[2], want[3]))
         self.play(want.animate.scale(0.5).to_corner(DL))
         new_hypothesis.set_color(WHITE)
         self.play(
             FadeIn(new_hypothesis[7]),
-            new_hypothesis[7].animate.shift(UP * 2.75)
+            new_hypothesis[7].animate.shift(UP * 2.6)
         )
         self.wait(1)
         new_hypothesis[8].set_color(BLUE) # 2k + 4
         self.play(
             FadeIn(new_hypothesis[8], new_hypothesis[9]),
-            new_hypothesis[8].animate.shift(UP * 2.75),
-            new_hypothesis[9].animate.shift(UP * 2.75)
+            new_hypothesis[8].animate.shift(UP * 2.7),
+            new_hypothesis[9].animate.shift(UP * 2.7)
         )
         self.wait(1)
+        plus_1: MathTex = MathTex("+ 1", color=YELLOW)
+        plus_1.next_to(new_hypothesis[9], RIGHT)
+        self.play(Write(plus_1))
+        self.wait(1)
+
         self.play(
             FadeIn(new_hypothesis[10]),
             new_hypothesis[10].animate.shift(UP * 2.75)
         )
         self.wait(1)
+        plus_2k: MathTex = MathTex("+ 2k", color=YELLOW)
+        plus_2k.next_to(new_hypothesis[10], RIGHT)
+        self.play(Write(plus_2k))
+        self.wait(1)
+
         new_hypothesis[12].set_color(ORANGE) # k^2 + 4k + 4
         self.play(
             FadeIn(new_hypothesis[11], new_hypothesis[12]),
             new_hypothesis[11].animate.shift(UP * 2.75),
             new_hypothesis[12].animate.shift(UP * 2.75)
         )
+        self.wait(1)
+        self.play(want.animate.scale(2).move_to(ORIGIN).shift(DOWN * 2))
+        shown: MathTex = MathTex(
+            r"\text{We have shown } 2(k + 2) &\leq (k + 2)^2\\",
+            r"2k + 4", r"&\leq", r"k^2 + 4k + 4."
+        )
+        shown[1].set_color(BLUE)
+        shown[3].set_color(ORANGE)
+        self.wait(1)
+        self.play(want.animate.become(shown).shift(DOWN * 2))
+        self.wait(1)
+
 class NegativeInduction(Scene):
     def construct(self):
         p_of_n: Tex = Tex(
