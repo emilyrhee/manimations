@@ -106,13 +106,13 @@ class PositiveInduction2(Scene):
             r"&\leq", r"k^2 + 4k + 4"
         )
         new_hypothesis_line_1: Group = new_hypothesis[0:7].shift(DOWN)
-        new_hypothesis.set_color_by_tex("k", PURPLE).shift(DOWN)
+        new_hypothesis.set_color_by_tex("k", PINK).shift(DOWN)
         self.play(FadeIn(new_hypothesis_line_1))
         k_equals_one: MathTex = MathTex(
             "2(", "1", "+ 1) = 2(2) = 4 \qquad (", "1", "+ 1)^2 = 2^2 = 4",
         )
-        k_equals_one[1].set_color(PURPLE)
-        k_equals_one[3].set_color(PURPLE)
+        k_equals_one[1].set_color(PINK)
+        k_equals_one[3].set_color(PINK)
         k_equals_one.shift(DOWN * 2)
         self.play(FadeIn(k_equals_one))
         self.wait(1)
@@ -142,6 +142,13 @@ class PositiveInduction2(Scene):
             new_hypothesis[7].animate.shift(UP * 2.6)
         )
         self.wait(1)
+        two_plus: MathTex = MathTex("2 +", color=YELLOW)
+        two_plus.next_to(new_hypothesis[7], LEFT)
+        plus_2: MathTex = MathTex("+ 2", color=YELLOW)
+        plus_2.next_to(new_hypothesis[7], RIGHT)
+        self.play(Write(two_plus), Write(plus_2))
+        self.wait(1)
+
         new_hypothesis[8].set_color(BLUE) # 2k + 4
         self.play(
             FadeIn(new_hypothesis[8], new_hypothesis[9]),
@@ -149,6 +156,7 @@ class PositiveInduction2(Scene):
             new_hypothesis[9].animate.shift(UP * 2.7)
         )
         self.wait(1)
+
         plus_1: MathTex = MathTex("+ 1", color=YELLOW)
         plus_1.next_to(new_hypothesis[9], RIGHT)
         self.play(Write(plus_1))
@@ -182,6 +190,34 @@ class PositiveInduction2(Scene):
         self.play(want.animate.become(shown).shift(DOWN * 2))
         self.wait(1)
 
+class ExampleInequality(Scene):
+    def construct(self):
+        example: MathTex = MathTex(
+            r"1 &\leq 2\\",
+            r"3 &\leq 4",
+        )
+        self.play(
+            FadeIn(Tex("Example inequality: ").to_edge(UP)),
+            FadeIn(example[0])
+        )
+        self.wait(1)
+        two_plus: MathTex = MathTex("2 +", color=YELLOW)
+        plus_2: MathTex = MathTex("+ 2", color=YELLOW)
+        plus_2.next_to(example[0], RIGHT)
+        two_plus.next_to(example[0], LEFT)
+        self.play(Write(plus_2), Write(two_plus))
+        self.wait(1)
+        self.play(FadeIn(example[1]))
+        image: ImageMobject = ImageMobject("assets/check.png")
+        image.shift(RIGHT * 3, DOWN * 2)
+        image.scale(0.5)
+        self.play(
+            FadeIn(image)
+        )
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob)for mob in self.mobjects]
+        )
 class NegativeInduction(Scene):
     def construct(self):
         p_of_n: Tex = Tex(
