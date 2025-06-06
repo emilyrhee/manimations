@@ -78,6 +78,30 @@ class PositiveInduction(Scene):
         check_emoji.scale(0.4).shift(RIGHT * 4, DOWN)
         self.play(Write(result), FadeIn(check_emoji))
 
+class Induction(Scene):
+    def construct(self):
+        hypothesis: Tex = Tex(
+            "Assume $2k \leq k^2$ for some integer $k \geq$",
+            " ", "$2$", "."
+        )
+        hypothesis.to_edge(UP)
+        want: MathTex = MathTex(
+            r"\text{We want }", r"2(k + 1) &\leq (k + 1)^2, \text{ or}\\",
+            r"2k + 2", r"&\leq", r"k^2 + 2k + 1"   
+        )
+        want[2].set_color(BLUE)
+        want[4].set_color(ORANGE)
+        want_line_1: Group = want[0:2]
+        want_line_2: Group = want[2:5]
+
+        self.play(FadeIn(hypothesis)) # Assume 2k <= k^2
+        self.wait(1)
+        self.play(FadeIn(want_line_1)) # Want 2(k + 1) <= (k + 1)^2
+        self.wait(1)
+        self.play(FadeIn(want_line_2)) # 2k + 2 <= 2k + 1
+        self.wait(1)
+        
+    
 class PositiveInduction2(Scene):
     def construct(self):
         hypothesis: Tex = Tex(
@@ -179,7 +203,7 @@ class PositiveInduction2(Scene):
             new_hypothesis[12].animate.shift(UP * 2.75)
         )
         self.wait(1)
-        self.play(want.animate.scale(2).move_to(ORIGIN).shift(DOWN * 2))
+        self.play(want.animate.scale(2).move_to(ORIGIN).shift(DOWN))
         shown: MathTex = MathTex(
             r"\text{We have shown } 2(k + 2) &\leq (k + 2)^2\\",
             r"2k + 4", r"&\leq", r"k^2 + 4k + 4."
@@ -187,7 +211,13 @@ class PositiveInduction2(Scene):
         shown[1].set_color(BLUE)
         shown[3].set_color(ORANGE)
         self.wait(1)
-        self.play(want.animate.become(shown).shift(DOWN * 2))
+        self.play(want.animate.become(shown).shift(DOWN))
+        self.wait(1)
+        hence: Tex = Tex(
+            r"Hence, by mathematical induction, \\$2n \leq n^2$ for all integers $n \geq 2$."
+        )
+        hence.shift(DOWN * 3)
+        self.play(FadeIn(hence))
         self.wait(1)
 
 class ExampleInequality(Scene):
@@ -216,7 +246,7 @@ class ExampleInequality(Scene):
         )
         self.wait(1)
         self.play(
-            *[FadeOut(mob)for mob in self.mobjects]
+            *[FadeOut(mob) for mob in self.mobjects]
         )
 class NegativeInduction(Scene):
     def construct(self):
