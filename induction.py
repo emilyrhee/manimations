@@ -84,15 +84,33 @@ class Induction(Scene):
             "Assume $2k \leq k^2$ for some integer $k \geq$",
             " ", "$2$", "."
         )
-        hypothesis.to_edge(UP)
         want: MathTex = MathTex(
             r"\text{We want }", r"2(k + 1) &\leq (k + 1)^2, \text{ or}\\",
-            r"2k + 2", r"&\leq", r"k^2 + 2k + 1"   
+            r"2k + 2", r"&\leq", r"k^2 + 2k + 1", r"."   
         )
+        have: MathTex = MathTex(
+            r"\text{We have }", r"2k + 2 &\leq k^2 + 2\\",
+            r"&\leq k^2 + 2k\\",
+            r"&\leq k^2 + 2k + 1", r"."
+        )
+        twok_leq_2 :MathTex = MathTex(r"2k \leq 2 \text{ for all } k \leq 1")
+        plus_one: MathTex = MathTex("+ 1", color=YELLOW)
+        
         want[2].set_color(BLUE)
         want[4].set_color(ORANGE)
+
         want_line_1: Group = want[0:2]
-        want_line_2: Group = want[2:5]
+        want_line_2: Group = want[2:6]
+        have_line_1: Group = have[0:2]
+        have_line_2: Group = have[2:3]
+        have_line_3: Group = have[3:5]
+
+        hypothesis.to_edge(UP)
+        want.shift(UP * 2)
+        want.align_to(hypothesis, LEFT)
+        have.align_to(hypothesis, LEFT)
+        plus_one.next_to(have_line_2)
+        twok_leq_2.next_to(have_line_2)
 
         self.play(FadeIn(hypothesis)) # Assume 2k <= k^2
         self.wait(1)
@@ -100,8 +118,17 @@ class Induction(Scene):
         self.wait(1)
         self.play(FadeIn(want_line_2)) # 2k + 2 <= 2k + 1
         self.wait(1)
-        
-    
+        self.play(FadeIn(have_line_1)) # We have 2k + <= k^2 + 2
+        self.wait(1)
+        self.play(FadeIn(have_line_2)) # k^2 + 2k
+        self.wait(1)
+        self.play(Write(twok_leq_2))
+        self.wait(1)
+        self.play(Write(plus_one))
+        self.wait(1)
+        self.play(FadeIn(have_line_3)) # k^2 + 2k + 1
+        self.wait(1)
+
 class PositiveInduction2(Scene):
     def construct(self):
         hypothesis: Tex = Tex(
