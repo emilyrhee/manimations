@@ -89,30 +89,32 @@ class Induction(Scene):
             r"2k + 2", r"&\leq", r"k^2 + 2k + 1", r"."   
         )
         have: MathTex = MathTex(
-            r"\text{We have }", r"2k + 2 &\leq k^2 + 2\\",
+            r"\text{We have }", r"2k + 2", r"&\leq k^2 + 2\\",
             r"&\leq k^2 + 2k\\",
-            r"&\leq k^2 + 2k + 1", r"."
+            r"&\leq", r"k^2 + 2k + 1", r"."
         )
-        twok_leq_2 :MathTex = MathTex(r"2k \leq 2 \text{ for all } k \leq 1")
-        plus_one: MathTex = MathTex("+ 1", color=YELLOW)
+        twok_leq_2 :MathTex = MathTex(
+            r"(2k \leq 2 \text{ for all } k \leq 1)", color=YELLOW
+        )
         
-        want[2].set_color(BLUE)
-        want[4].set_color(ORANGE)
-
         want_line_1: Group = want[0:2]
         want_line_2: Group = want[2:6]
-        have_line_1: Group = have[0:2]
-        have_line_2: Group = have[2:3]
-        have_line_3: Group = have[3:5]
+        have_line_1: Group = have[0:3]
+        have_line_2: Group = have[3:4]
+        have_line_3: Group = have[4:7]
+
+        want[2].set_color(BLUE)
+        want[4].set_color(ORANGE)
+        have_line_1[1].set_color(BLUE)
+        have_line_3[1].set_color(ORANGE)
 
         hypothesis.to_edge(UP)
         want.shift(UP * 2)
         want.align_to(hypothesis, LEFT)
         have.align_to(hypothesis, LEFT)
-        plus_one.next_to(have_line_2)
         twok_leq_2.next_to(have_line_2)
 
-        self.play(FadeIn(hypothesis)) # Assume 2k <= k^2
+        self.play(FadeIn(hypothesis))  # Assume 2k <= k^2
         self.wait(1)
         self.play(FadeIn(want_line_1)) # Want 2(k + 1) <= (k + 1)^2
         self.wait(1)
@@ -122,9 +124,7 @@ class Induction(Scene):
         self.wait(1)
         self.play(FadeIn(have_line_2)) # k^2 + 2k
         self.wait(1)
-        self.play(Write(twok_leq_2))
-        self.wait(1)
-        self.play(Write(plus_one))
+        self.play(FadeIn(twok_leq_2))
         self.wait(1)
         self.play(FadeIn(have_line_3)) # k^2 + 2k + 1
         self.wait(1)
@@ -319,58 +319,63 @@ class NegativeHypothesis(Scene):
     def construct(self):
         hypothesis: MathTex = MathTex(
             r"\text{Assume } 2k &\leq k^2 \text{ for some negative integer } k.\\",
-            "2k - 2", r"&\leq k^2 - 2\\",
+            r"2k - 2", r"&\leq k^2 - 2\\",
             r"&\leq k^2 + 1\\",
             r"  &\leq", "k^2 - 2k + 1."
         )
-        self.play(FadeIn(hypothesis.get_part_by_tex(r"2k &\leq k^2")))
-        self.play(hypothesis.get_part_by_tex(r"2k &\leq k^2").animate.to_edge(UP))
-        self.wait(1)
-        hypothesis.set_color_by_tex("2k - 2", BLUE)
-
-        want: Tex = Tex(
-            "We want $2(k - 1) \leq (k - 1)^2$."
-        )
-        self.play(FadeIn(want))
-        self.wait(1)
-        want_lhs_distributed: Tex = Tex(
-            "We want", " ", "$2k - 2$", " ", "$\leq (k - 1)^2$."
-        )
-        want_lhs_distributed.set_color_by_tex("$2k - 2", BLUE)
-        self.play(want.animate.become(want_lhs_distributed))
-        self.wait(1)
-        want_rhs_expanded: Tex = Tex(
-            "We want", " ", "$2k - 2$", " ", "$\leq$", " ", "$k^2 - 2k + 1$."
-        )
-        want_rhs_expanded.set_color_by_tex("$2k - 2", BLUE).set_color_by_tex("$k^2 - 2k + 1", ORANGE)
-        self.play(want.animate.become(want_rhs_expanded))
-        self.wait(1)
-        self.play(want.animate.scale(0.5).to_corner(DL))
-        self.wait(1)
-        group = Group(hypothesis.get_part_by_tex("2k - 2"), hypothesis.get_part_by_tex(r"&\leq k^2 - 2\\"))
-        self.play(FadeIn(group))
-        self.play(group.animate.shift(UP * 2))
-        self.wait(1)
         plus_3: MathTex = MathTex(
             "+ 3",
             color=YELLOW
         )
-        plus_3.next_to(hypothesis.get_part_by_tex(r"&\leq k^2 - 2\\"), RIGHT)
-        self.play(Write(plus_3))
-        self.wait(1)
-        hypothesis.set_color_by_tex("k^2 - 2k + 1.", ORANGE)
-       
-        last_group = Group(hypothesis.get_part_by_tex(r"  &\leq"), hypothesis.get_part_by_tex("k^2 - 2k + 1."))
-        self.play(last_group.animate.shift(UP * 2))
-        self.play(want.animate.move_to(ORIGIN).scale(2))
-        self.wait(1)
+        want: Tex = Tex(
+            "We want $2(k - 1) \leq (k - 1)^2$."
+        )
+        want_lhs_distributed: Tex = Tex(
+            "We want", " ", "$2k - 2$", " ", "$\leq (k - 1)^2$."
+        )
+        want_rhs_expanded: Tex = Tex(
+            "We want", " ", "$2k - 2$", " ", "$\leq$", " ", "$k^2 - 2k + 1$."
+        )
         conclusion: Tex = Tex("We have shown", " ", "$2(k - 1)$", " ", "$\leq$", " ", "$(k - 1)^2$.")
-        conclusion.set_color_by_tex("$2(k - 1)$", ORANGE).set_color_by_tex("$(k - 1)^2$.", BLUE)
-        self.play(want.animate.become(conclusion))
         hence: Tex = Tex(
             r"Hence, by mathematical induction, \\$2n \leq n^2$ for all negative integers $n$."
         )
-        hence.shift(DOWN * 2)
+
+        hypothesis.set_color_by_tex("2k - 2", BLUE)
+        want_lhs_distributed.set_color_by_tex("$2k - 2", BLUE)
+        want_rhs_expanded.set_color_by_tex("$2k - 2", BLUE).set_color_by_tex("$k^2 - 2k + 1", ORANGE)
+        hypothesis.set_color_by_tex("k^2 - 2k + 1.", ORANGE)
+        conclusion.set_color_by_tex("$2(k - 1)$", ORANGE).set_color_by_tex("$(k - 1)^2$.", BLUE)
+
+        hypothesis_line_1 = Group(hypothesis.get_part_by_tex("2k - 2"), hypothesis.get_part_by_tex(r"&\leq k^2 - 2\\"))
+        hypothesis_line_2: Group = hypothesis[3:4]
+        last_group = Group(hypothesis.get_part_by_tex(r"  &\leq"), hypothesis.get_part_by_tex("k^2 - 2k + 1."))
+
+        plus_3.next_to(hypothesis.get_part_by_tex(r"&\leq k^2 - 2\\"), RIGHT)
+        hence.shift(DOWN * 2).align_to(hypothesis, LEFT)
+        conclusion.align_to(hypothesis, LEFT)
+
+        self.play(FadeIn(hypothesis.get_part_by_tex(r"2k &\leq k^2")))
+        self.play(hypothesis.get_part_by_tex(r"2k &\leq k^2").animate.to_edge(UP))
+        self.wait(1)
+        self.play(FadeIn(want))
+        self.wait(1)
+        self.play(want.animate.become(want_lhs_distributed))
+        self.wait(1)
+        self.play(want.animate.become(want_rhs_expanded))
+        self.wait(1)
+        self.play(want.animate.scale(0.5).to_corner(DL))
+        self.wait(1)
+        self.play(FadeIn(hypothesis_line_1))
+        self.play(hypothesis_line_1.animate.shift(UP * 2))
+        self.wait(1)
+        self.play(FadeIn(hypothesis_line_2))
+        self.play(Write(plus_3))
+        self.wait(1)
+        self.play(last_group.animate.shift(UP * 2))
+        self.play(want.animate.move_to(ORIGIN).scale(2))
+        self.wait(1)
+        self.play(want.animate.become(conclusion))
         self.play(FadeIn(hence))
         self.wait(1)
 
