@@ -319,63 +319,51 @@ class NegativeHypothesis(Scene):
     def construct(self):
         hypothesis: MathTex = MathTex(
             r"\text{Assume } 2k &\leq k^2 \text{ for some negative integer } k.\\",
-            r"2k - 2", r"&\leq k^2 - 2\\",
-            r"&\leq k^2 + 1\\",
-            r"  &\leq", "k^2 - 2k + 1."
         )
         plus_3: MathTex = MathTex(
             "+ 3",
             color=YELLOW
         )
-        want: Tex = Tex(
-            "We want $2(k - 1) \leq (k - 1)^2$."
+        want: MathTex = MathTex(
+            r"\text{We want } 2(k - 1) &\leq (k - 1)^2, \text{ or }\\",
+            r"2k - 2", r"&\leq", r"k^2 - 2k + 1", r"."
         )
-        want_lhs_distributed: Tex = Tex(
-            "We want", " ", "$2k - 2$", " ", "$\leq (k - 1)^2$."
-        )
-        want_rhs_expanded: Tex = Tex(
-            "We want", " ", "$2k - 2$", " ", "$\leq$", " ", "$k^2 - 2k + 1$."
+        have: MathTex = MathTex(
+            r"\text{We have }", r"2k - 2", r"&\leq k^2 - 2\\",
+            r"&\leq k^2 + 1\\",
+            r"&\leq", r"k^2 - 2k + 1", r"."
         )
         conclusion: Tex = Tex("We have shown", " ", "$2(k - 1)$", " ", "$\leq$", " ", "$(k - 1)^2$.")
         hence: Tex = Tex(
             r"Hence, by mathematical induction, \\$2n \leq n^2$ for all negative integers $n$."
         )
 
-        hypothesis.set_color_by_tex("2k - 2", BLUE)
-        want_lhs_distributed.set_color_by_tex("$2k - 2", BLUE)
-        want_rhs_expanded.set_color_by_tex("$2k - 2", BLUE).set_color_by_tex("$k^2 - 2k + 1", ORANGE)
-        hypothesis.set_color_by_tex("k^2 - 2k + 1.", ORANGE)
-        conclusion.set_color_by_tex("$2(k - 1)$", ORANGE).set_color_by_tex("$(k - 1)^2$.", BLUE)
+        want_line_1: Group = want[0:1]
+        want_line_2: Group = want[1:5]
+        have_line_1: Group = have[0:3]
+        have_line_2: Group = have[3:4]
+        have_line_3: Group = have[4:7]
 
-        hypothesis_line_1 = Group(hypothesis.get_part_by_tex("2k - 2"), hypothesis.get_part_by_tex(r"&\leq k^2 - 2\\"))
-        hypothesis_line_2: Group = hypothesis[3:4]
-        last_group = Group(hypothesis.get_part_by_tex(r"  &\leq"), hypothesis.get_part_by_tex("k^2 - 2k + 1."))
+        want_line_2[0].set_color(BLUE)
+        want_line_2[2].set_color(ORANGE)
+        have_line_1[1].set_color(BLUE)
+        have_line_3[1].set_color(ORANGE)
 
-        plus_3.next_to(hypothesis.get_part_by_tex(r"&\leq k^2 - 2\\"), RIGHT)
+        hypothesis.to_edge(UP)
         hence.shift(DOWN * 2).align_to(hypothesis, LEFT)
-        conclusion.align_to(hypothesis, LEFT)
+        want.align_to(hypothesis, LEFT)
+        have.align_to(hypothesis, LEFT)
+        want.shift(UP * 2)
 
-        self.play(FadeIn(hypothesis.get_part_by_tex(r"2k &\leq k^2")))
-        self.play(hypothesis.get_part_by_tex(r"2k &\leq k^2").animate.to_edge(UP))
+        self.play(FadeIn(hypothesis))
         self.wait(1)
-        self.play(FadeIn(want))
+        self.play(FadeIn(want_line_1)) # We want 2(k - 1) <= (k - 2)^2
         self.wait(1)
-        self.play(want.animate.become(want_lhs_distributed))
+        self.play(FadeIn(want_line_2)) # 2k - 2 <= k^2 - 2k + 1
         self.wait(1)
-        self.play(want.animate.become(want_rhs_expanded))
+        self.play(FadeIn(have_line_1))
         self.wait(1)
-        self.play(want.animate.scale(0.5).to_corner(DL))
+        self.play(FadeIn(have_line_2))
         self.wait(1)
-        self.play(FadeIn(hypothesis_line_1))
-        self.play(hypothesis_line_1.animate.shift(UP * 2))
+        self.play(FadeIn(have_line_3))
         self.wait(1)
-        self.play(FadeIn(hypothesis_line_2))
-        self.play(Write(plus_3))
-        self.wait(1)
-        self.play(last_group.animate.shift(UP * 2))
-        self.play(want.animate.move_to(ORIGIN).scale(2))
-        self.wait(1)
-        self.play(want.animate.become(conclusion))
-        self.play(FadeIn(hence))
-        self.wait(1)
-
