@@ -318,7 +318,7 @@ class NegativeInduction(Scene):
 class NegativeHypothesis(Scene):
     def construct(self):
         hypothesis: MathTex = MathTex(
-            r"\text{Assume } 2k &\leq k^2 \text{ for some negative integer } k.\\",
+            r"\text{Assume } 2k &\leq k^2 \text{ for some }", r"\text{negative integer } k.\\",
         )
         plus_3: MathTex = MathTex(
             "+ 3",
@@ -333,9 +333,15 @@ class NegativeHypothesis(Scene):
             r"&\leq k^2 + 1\\",
             r"&\leq", r"k^2 - 2k + 1", r"."
         )
+        by_hypothesis: Tex = Tex("(By hypothesis)", color=YELLOW)
         conclusion: Tex = Tex("We have shown", " ", "$2(k - 1)$", " ", "$\leq$", " ", "$(k - 1)^2$.")
-        hence: Tex = Tex(
-            r"Hence, by mathematical induction, \\$2n \leq n^2$ for all negative integers $n$."
+        hence: MathTex = MathTex(
+            r"&\text{Hence, by mathematical induction, } 2n \leq n^2 \text{ for}\\",
+            r"&\text{all negative integers } n."
+        )
+        negative_two_k: Tex = Tex(
+            "($-2k$ is positive)",
+            color=YELLOW
         )
 
         want_line_1: Group = want[0:1]
@@ -350,10 +356,18 @@ class NegativeHypothesis(Scene):
         have_line_3[1].set_color(ORANGE)
 
         hypothesis.to_edge(UP)
-        hence.shift(DOWN * 2).align_to(hypothesis, LEFT)
         want.align_to(hypothesis, LEFT)
         have.align_to(hypothesis, LEFT)
+        hence.align_to(hypothesis, LEFT)
+        hence.shift(DOWN * 3).align_to(hypothesis, LEFT)
         want.shift(UP * 2)
+        conclusion.shift(DOWN * 1.75).align_to(hypothesis, LEFT)
+        by_hypothesis.next_to(have_line_1)
+        negative_two_k.next_to(have_line_3)
+        
+        negative_k_emphasis: SurroundingRectangle = SurroundingRectangle(
+            hypothesis[1], color=YELLOW
+        )
 
         self.play(FadeIn(hypothesis))
         self.wait(1)
@@ -363,7 +377,18 @@ class NegativeHypothesis(Scene):
         self.wait(1)
         self.play(FadeIn(have_line_1))
         self.wait(1)
+        self.play(FadeIn(by_hypothesis))
+        self.wait(1)
         self.play(FadeIn(have_line_2))
         self.wait(1)
         self.play(FadeIn(have_line_3))
         self.wait(1)
+        self.play(Write(negative_k_emphasis))
+        self.wait(1)
+        self.play(FadeIn(negative_two_k))
+        self.wait(1)
+        self.play(FadeOut(negative_k_emphasis))
+        self.wait(1)
+        self.play(FadeIn(conclusion))
+        self.wait(1)
+        self.play(FadeIn(hence))
