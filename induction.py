@@ -56,9 +56,8 @@ class PositiveInduction(Scene):
         self.play(claim.animate.to_edge(UP))
         
         base_case: Tex = Tex("Base case: $n = 2$")
+        base_case.align_to(claim, LEFT).shift(UP * 2)
         self.play(FadeIn(base_case))
-        self.wait(1)
-        self.play(base_case.animate.shift(LEFT * 5, UP * 2))
         self.wait(1)
 
         expression: MathTex = MathTex("2(2)", "=", "4", "\qquad", "2^2", "=", "4")
@@ -288,20 +287,19 @@ class NegativeInduction(Scene):
         self.wait(1)
 
         base_case: Tex = Tex(
-            "Base case: $n = -1$",
+            "Base case: $n = -1$.",
         )
+        base_case.align_to(p_of_n, LEFT).shift(UP * 2)
         self.play(FadeIn(base_case))
-        self.wait(1)
-        self.play(base_case.animate.shift(LEFT * 5, UP * 2))
 
         left_hand_side: MathTex = MathTex(
-            "2(-1) = -2",
-            color=BLUE
+            "2(-1)", "=", "-2"
         )
         right_hand_side: MathTex = MathTex(
-            "(-1)^2 = 1",
-            color=ORANGE
+            "(-1)^2", "=", "1"
         )
+        Group(left_hand_side[0], left_hand_side[2]).set_color(BLUE)
+        Group(right_hand_side[0], right_hand_side[2]).set_color(ORANGE)
         group: Group = Group(left_hand_side, right_hand_side)
         group.arrange(RIGHT, buff=1)
         for expression in group:
@@ -319,10 +317,6 @@ class NegativeHypothesis(Scene):
     def construct(self):
         hypothesis: MathTex = MathTex(
             r"\text{Assume } 2k &\leq k^2 \text{ for some }", r"\text{negative integer } k.\\",
-        )
-        plus_3: MathTex = MathTex(
-            "+ 3",
-            color=YELLOW
         )
         want: MathTex = MathTex(
             r"\text{We want } 2(k - 1) &\leq (k - 1)^2, \text{ or }\\",
@@ -392,3 +386,4 @@ class NegativeHypothesis(Scene):
         self.play(FadeIn(conclusion))
         self.wait(1)
         self.play(FadeIn(hence))
+        self.wait(1)
