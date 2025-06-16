@@ -8,6 +8,9 @@ class Graph(Scene):
             y_range = [-11, 11],
             tips=False
         )
+
+        n_squared_line: VMobject = axes.plot(lambda x: x**2, x_range=[-3, 3], color=DARK_BROWN)
+        two_n_line: VMobject = axes.plot(lambda x: 2 * x, x_range=[-4, 6], color=DARK_BLUE)
         n_squared_points: List = [
             Dot(axes.coords_to_point(n, n * n), color=ORANGE)
             for n in range(-3, 4)
@@ -17,14 +20,39 @@ class Graph(Scene):
             for n in range(-4, 7)
         ]
         remaining_points: List = n_squared_points[len(two_n_points):] + two_n_points[len(n_squared_points):]
-        two_n: MathTex = MathTex("2n", color=BLUE)
-        n_squared: MathTex = MathTex("n^2", color=ORANGE)
+        claim: MathTex = MathTex(
+            r"2n", r"\leq", r"n^2"
+        )
+        for_all_negative: Tex = Tex("for all negative $n$.")
+        for_all_positive: Tex = Tex("for all $n \geq 2$")
 
-        self.play(FadeIn(axes))
+        claim.shift(LEFT * 5, UP * 2)
+        for_all_negative.next_to(claim, DOWN)
+        for_all_negative.align_to(claim, LEFT)
+        
+        claim[0].set_color(BLUE)
+        claim[2].set_color(ORANGE)
+
+        claim_copy: MathTex = claim.copy()
+
+        claim_copy.shift(DOWN * 3)
+        for_all_positive.next_to(claim_copy, DOWN)
+        for_all_positive.align_to(claim_copy, LEFT)
+
+        self.play(FadeIn(axes, claim[0], claim[2]))
+        self.play(
+            Create(n_squared_line, rate_func=linear),
+            Create(two_n_line, rate_func=linear),
+        )
         for n_point, t_point in zip(n_squared_points, two_n_points):
-            self.play(FadeIn(n_point, run_time=0.3),FadeIn(t_point, run_time=0.3))
+            self.play(FadeIn(n_point, t_point, run_time=0.3))
+        self.play(FadeIn(claim[1], for_all_negative))
         self.play(*[FadeIn(point, run_time=0.3) for point in remaining_points])
-        self.play(1)
+        self.play(FadeIn(claim_copy, for_all_positive))
+        self.wait(1)
+        self.play(
+            *[FadeOut(mob) for mob in self.mobjects]
+        )
 
 class Intro(Scene):
     def construct(self):
