@@ -1,6 +1,31 @@
 from manim import *
 from utils.strikethrough import Strikethrough
 
+class Graph(Scene):
+    def construct(self):
+        axes: Axes = Axes(
+            x_range = [-22, 22],
+            y_range = [-11, 11],
+            tips=False
+        )
+        n_squared_points: List = [
+            Dot(axes.coords_to_point(n, n * n), color=ORANGE)
+            for n in range(-3, 4)
+        ]
+        two_n_points: List = [
+            Dot(axes.coords_to_point(n, 2 * n), color=BLUE)
+            for n in range(-4, 7)
+        ]
+        remaining_points: List = n_squared_points[len(two_n_points):] + two_n_points[len(n_squared_points):]
+        two_n: MathTex = MathTex("2n", color=BLUE)
+        n_squared: MathTex = MathTex("n^2", color=ORANGE)
+
+        self.play(FadeIn(axes))
+        for n_point, t_point in zip(n_squared_points, two_n_points):
+            self.play(FadeIn(n_point, run_time=0.3),FadeIn(t_point, run_time=0.3))
+        self.play(*[FadeIn(point, run_time=0.3) for point in remaining_points])
+        self.play(1)
+
 class Intro(Scene):
     def construct(self):
         steps: Tex = Tex("Steps to induction:")
