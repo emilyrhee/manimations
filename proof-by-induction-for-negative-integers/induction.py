@@ -6,25 +6,26 @@ class Graph(Scene):
         axes: Axes = Axes(
             x_range = [-22, 22],
             y_range = [-11, 11],
-            tips=False
+            tips=False,
+            x_axis_config={"numbers_to_include": [2]}
         )
 
         n_squared_line: VMobject = axes.plot(lambda x: x**2, x_range=[-3, 3], color=DARK_BROWN)
-        two_n_line: VMobject = axes.plot(lambda x: 2 * x, x_range=[-4, 6], color=DARK_BLUE)
+        two_n_line: VMobject = axes.plot(lambda x: 2 * x, x_range=[-4, 5], color=DARK_BLUE)
         n_squared_points: List = [
             Dot(axes.coords_to_point(n, n * n), color=ORANGE)
             for n in range(-3, 4)
         ]
         two_n_points: List = [
             Dot(axes.coords_to_point(n, 2 * n), color=BLUE)
-            for n in range(-4, 7)
+            for n in range(-4, 6)
         ]
         remaining_points: List = n_squared_points[len(two_n_points):] + two_n_points[len(n_squared_points):]
         claim: MathTex = MathTex(
             r"2n", r"\leq", r"n^2"
         )
         for_all_negative: Tex = Tex("for all negative $n$.")
-        for_all_positive: Tex = Tex("for all $n \geq 2$")
+        for_all_positive: Tex = Tex("for all $n \geq 2$.")
 
         claim.shift(LEFT * 5, UP * 2)
         for_all_negative.next_to(claim, DOWN)
@@ -146,7 +147,11 @@ class Induction(Scene):
             r"&\leq", r"k^2 + 2k + 1", r"."
         )
         twok_leq_2 :MathTex = MathTex(
-            r"(2k \leq 2 \text{ for all } k \leq 1)", color=YELLOW
+            r"(2k \geq 2 \text{ for all } k \geq 1)", color=YELLOW
+        )
+        hence: MathTex = MathTex(
+            r"&\text{Hence, by mathematical induction, }\\",
+            r"&2n \leq n^2 \text{ for } \text{all integers } n \geq 2."
         )
         
         want_line_1: Group = want[0:2]
@@ -165,6 +170,8 @@ class Induction(Scene):
         want.align_to(hypothesis, LEFT)
         have.align_to(hypothesis, LEFT)
         twok_leq_2.next_to(have_line_2)
+        hence.align_to(hypothesis, LEFT)
+        hence.shift(DOWN * 2).align_to(hypothesis, LEFT)
 
         self.play(FadeIn(hypothesis))  # Assume 2k <= k^2
         self.wait(1)
@@ -180,122 +187,6 @@ class Induction(Scene):
         self.wait(1)
         self.play(FadeIn(have_line_3)) # k^2 + 2k + 1
         self.wait(1)
-
-class PositiveInduction2(Scene):
-    def construct(self):
-        hypothesis: Tex = Tex(
-            "Assume $2k \leq k^2$ for some integer $k \geq$",
-            " ", "$2$", ".")
-        self.play(FadeIn(hypothesis))
-        self.wait(1)
-        rectangle = SurroundingRectangle(hypothesis[2],color=YELLOW)
-        self.play(Write(rectangle))
-        self.wait(1)
-        self.play(FadeOut(rectangle))
-
-        strikethrough = Strikethrough(hypothesis)
-        self.play(Create(strikethrough))
-
-        instead: Tex = Tex("Instead...")
-        instead.shift(UP)
-        self.play(strikethrough.group.animate.shift(UP * 2), FadeIn(instead))
-        new_hypothesis: MathTex = MathTex(
-            r"\text{Assume } 2(", r"k", r"+ 1) &\leq (", r"k",
-            r"+ 1)^2 \text{ for some integer }", r"k", r"\geq 1.\\",
-
-            r"2k + 2 &\leq k^2 + 2k + 1\\",
-            r"2k + 4", r"&\leq k^2 + 2k + 3\\",
-            r"&\leq k^2 + 2k + 4\\",
-            r"&\leq", r"k^2 + 4k + 4"
-        )
-        new_hypothesis_line_1: Group = new_hypothesis[0:7].shift(DOWN)
-        new_hypothesis.set_color_by_tex("k", PINK).shift(DOWN)
-        self.play(FadeIn(new_hypothesis_line_1))
-        k_equals_one: MathTex = MathTex(
-            "2(", "1", "+ 1) = 2(2) = 4 \qquad (", "1", "+ 1)^2 = 2^2 = 4",
-        )
-        k_equals_one[1].set_color(PINK)
-        k_equals_one[3].set_color(PINK)
-        k_equals_one.shift(DOWN * 2)
-        self.play(FadeIn(k_equals_one))
-        self.wait(1)
-        self.play(
-            FadeOut(strikethrough.group, instead, k_equals_one),
-            new_hypothesis_line_1.animate.to_edge(UP)
-        )
-        self.wait(1)
-
-        want: MathTex = MathTex(
-            r"\text{We want } 2(k + 2) &\leq (k + 2)^2\\",
-            r"2k + 4", r"&\leq", r"k^2 + 4k + 4."
-        )
-        want[1].set_color(BLUE)
-        want[3].set_color(ORANGE)
-        self.play(FadeIn(want[0]))
-        self.play(new_hypothesis_line_1.animate.set_color(WHITE))
-        self.wait(1)
-        
-        self.play(FadeIn(want[1]))
-        self.wait(1)
-        self.play(FadeIn(want[2], want[3]))
-        self.play(want.animate.scale(0.5).to_corner(DL))
-        new_hypothesis.set_color(WHITE)
-        self.play(
-            FadeIn(new_hypothesis[7]),
-            new_hypothesis[7].animate.shift(UP * 2.6)
-        )
-        self.wait(1)
-        two_plus: MathTex = MathTex("2 +", color=YELLOW)
-        two_plus.next_to(new_hypothesis[7], LEFT)
-        plus_2: MathTex = MathTex("+ 2", color=YELLOW)
-        plus_2.next_to(new_hypothesis[7], RIGHT)
-        self.play(Write(two_plus), Write(plus_2))
-        self.wait(1)
-
-        new_hypothesis[8].set_color(BLUE) # 2k + 4
-        self.play(
-            FadeIn(new_hypothesis[8], new_hypothesis[9]),
-            new_hypothesis[8].animate.shift(UP * 2.7),
-            new_hypothesis[9].animate.shift(UP * 2.7)
-        )
-        self.wait(1)
-
-        plus_1: MathTex = MathTex("+ 1", color=YELLOW)
-        plus_1.next_to(new_hypothesis[9], RIGHT)
-        self.play(Write(plus_1))
-        self.wait(1)
-
-        self.play(
-            FadeIn(new_hypothesis[10]),
-            new_hypothesis[10].animate.shift(UP * 2.75)
-        )
-        self.wait(1)
-        plus_2k: MathTex = MathTex("+ 2k", color=YELLOW)
-        plus_2k.next_to(new_hypothesis[10], RIGHT)
-        self.play(Write(plus_2k))
-        self.wait(1)
-
-        new_hypothesis[12].set_color(ORANGE) # k^2 + 4k + 4
-        self.play(
-            FadeIn(new_hypothesis[11], new_hypothesis[12]),
-            new_hypothesis[11].animate.shift(UP * 2.75),
-            new_hypothesis[12].animate.shift(UP * 2.75)
-        )
-        self.wait(1)
-        self.play(want.animate.scale(2).move_to(ORIGIN).shift(DOWN))
-        shown: MathTex = MathTex(
-            r"\text{We have shown } 2(k + 2) &\leq (k + 2)^2\\",
-            r"2k + 4", r"&\leq", r"k^2 + 4k + 4."
-        )
-        shown[1].set_color(BLUE)
-        shown[3].set_color(ORANGE)
-        self.wait(1)
-        self.play(want.animate.become(shown).shift(DOWN))
-        self.wait(1)
-        hence: Tex = Tex(
-            r"Hence, by mathematical induction, \\$2n \leq n^2$ for all integers $n \geq 2$."
-        )
-        hence.shift(DOWN * 3)
         self.play(FadeIn(hence))
         self.wait(1)
 
@@ -305,24 +196,42 @@ class ExampleInequality(Scene):
             r"1 &\leq 2\\",
             r"3 &\leq 4",
         )
+        number_line = NumberLine(
+            x_range=[0, 5, 1],
+            length=6,
+            include_numbers=True,
+            label_direction=DOWN,
+        )
+        two_plus: MathTex = MathTex("2 +", color=YELLOW)
+        plus_2: MathTex = MathTex("+ 2", color=YELLOW)
+        image: ImageMobject = ImageMobject("assets/check.png")
+        leq: MathTex = MathTex(r"\leq")
+
+        plus_2.next_to(example[0], RIGHT)
+        two_plus.next_to(example[0], LEFT)
+        image.shift(RIGHT * 3)   
+        image.scale(0.25)
+        number_line.shift(DOWN * 2)
+        leq.move_to(number_line.n2p(1.5))
+        leq.shift(DOWN * .4)
+
         self.play(
             FadeIn(Tex("Example inequality: ").to_edge(UP)),
             FadeIn(example[0])
         )
         self.wait(1)
-        two_plus: MathTex = MathTex("2 +", color=YELLOW)
-        plus_2: MathTex = MathTex("+ 2", color=YELLOW)
-        plus_2.next_to(example[0], RIGHT)
-        two_plus.next_to(example[0], LEFT)
         self.play(Write(plus_2), Write(two_plus))
         self.wait(1)
         self.play(FadeIn(example[1]))
-        image: ImageMobject = ImageMobject("assets/check.png")
-        image.shift(RIGHT * 3, DOWN * 2)
-        image.scale(0.5)
         self.play(
             FadeIn(image)
         )
+        self.wait(1)
+        self.play(FadeOut(image))
+        self.wait(1)
+        self.play(FadeIn(number_line, leq))
+        self.wait(1)
+        self.play(leq.animate.move_to(number_line.n2p(3.5)).shift(DOWN * .4))
         self.wait(1)
         self.play(
             *[FadeOut(mob) for mob in self.mobjects]
